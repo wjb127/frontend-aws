@@ -8,18 +8,21 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setError('');
+    setLoading(true);
+
     if (password !== confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
+      const response = await fetch('/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,16 +30,18 @@ export default function SignupPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || '회원가입에 실패했습니다.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || '회원가입에 실패했습니다.');
       }
 
-      alert('회원가입 성공');
-      router.push('/login');
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      router.push('/posts');
     } catch (err) {
-      setError(err.message || '회원가입 중 오류가 발생했습니다.');
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 

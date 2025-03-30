@@ -7,12 +7,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,16 +24,18 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.message || '로그인에 실패했습니다.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || '로그인에 실패했습니다.');
       }
 
+      const data = await response.json();
       localStorage.setItem('token', data.token);
       router.push('/posts');
     } catch (err) {
-      setError(err.message || '로그인 중 오류가 발생했습니다.');
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
