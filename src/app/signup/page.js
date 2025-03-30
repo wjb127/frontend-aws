@@ -18,6 +18,7 @@ export default function SignupPage() {
 
     if (password !== confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
+      setLoading(false);
       return;
     }
 
@@ -27,7 +28,7 @@ export default function SignupPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, name }),
       });
 
       if (!response.ok) {

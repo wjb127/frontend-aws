@@ -11,16 +11,14 @@ export default function PostsPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
-        const data = await response.json();
-
+        const response = await fetch('/api/posts');
         if (!response.ok) {
-          throw new Error(data.message || '글 목록을 불러오는데 실패했습니다.');
+          throw new Error('게시글을 불러오는데 실패했습니다.');
         }
-
+        const data = await response.json();
         setPosts(data);
-      } catch (err) {
-        setError(err.message || '글 목록을 불러오는 중 오류가 발생했습니다.');
+      } catch (error) {
+        setError(error.message);
       }
     };
 
