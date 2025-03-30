@@ -4,7 +4,7 @@ const nextConfig = {
       return [
         {
           source: '/api/:path*',
-          destination: 'http://3.34.137.10:3000/:path*',
+          destination: 'https://my-backend-aws.duckdns.org/:path*',
         },
       ];
     },
