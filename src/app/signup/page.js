@@ -24,11 +24,13 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password, name }),
       });
 
@@ -38,8 +40,7 @@ export default function SignupPage() {
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
-      router.push('/posts');
+      router.push('/login');
     } catch (err) {
       setError(err.message);
     } finally {
