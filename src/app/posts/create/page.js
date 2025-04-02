@@ -27,7 +27,7 @@ export default function CreatePostPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+      const response = await fetch(`/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

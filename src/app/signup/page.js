@@ -3,9 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-// 백엔드 API URL을 직접 상수로 정의
-const API_URL = 'http://3.34.137.10:3000'; // 실제 EC2 IP 주소로 교체
-
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,7 +24,7 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/signup`, {
+      const response = await fetch(`/api/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

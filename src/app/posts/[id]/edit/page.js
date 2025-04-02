@@ -1,15 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { use } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
-export default function EditPostPage({ params }) {
+export default function EditPostPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { id } = use(params);
+  const params = useParams();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -20,7 +19,7 @@ export default function EditPostPage({ params }) {
       }
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
+        const response = await fetch(`/api/posts/${params.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -46,7 +45,7 @@ export default function EditPostPage({ params }) {
     };
 
     fetchPost();
-  }, [id, router]);
+  }, [params.id, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,7 +58,7 @@ export default function EditPostPage({ params }) {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
+      const response = await fetch(`/api/posts/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +77,7 @@ export default function EditPostPage({ params }) {
         }
       }
 
-      router.push(`/posts/${id}`);
+      router.push(`/posts/${params.id}`);
     } catch (err) {
       console.error('글 수정 에러:', err);
       setError(err.message || '글 수정 중 오류가 발생했습니다.');
@@ -132,7 +131,7 @@ export default function EditPostPage({ params }) {
               <div className="flex justify-end space-x-3">
                 <button
                   type="button"
-                  onClick={() => router.push(`/posts/${id}`)}
+                  onClick={() => router.push(`/posts/${params.id}`)}
                   className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   취소

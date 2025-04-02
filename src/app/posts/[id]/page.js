@@ -1,20 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { use } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
-export default function PostDetailPage({ params }) {
+export default function PostDetailPage() {
   const [post, setPost] = useState(null);
   const [error, setError] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const router = useRouter();
-  const { id } = use(params);
+  const params = useParams();
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`);
+        const response = await fetch(`/api/posts/${params.id}`);
         
         if (!response.ok) {
           const contentType = response.headers.get('content-type');
@@ -49,14 +48,14 @@ export default function PostDetailPage({ params }) {
 
     fetchPost();
     fetchUserInfo();
-  }, [id]);
+  }, [params.id]);
 
   const handleDelete = async () => {
     if (!confirm('정말로 이 글을 삭제하시겠습니까?')) return;
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
+      const response = await fetch(`/api/posts/${params.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -124,7 +123,7 @@ export default function PostDetailPage({ params }) {
               {userEmail === post.user_email && (
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => router.push(`/posts/${id}/edit`)}
+                    onClick={() => router.push(`/posts/${params.id}/edit`)}
                     className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     수정
